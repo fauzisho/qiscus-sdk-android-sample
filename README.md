@@ -1,5 +1,4 @@
 # Qiscus SDK
-
 ======
 
 Qiscus SDK is a lightweight and powerful android chat library. Qiscus SDK will allow you to easyly integrating Qiscus engine with your apps to make cool chatting application.
