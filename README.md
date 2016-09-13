@@ -23,6 +23,7 @@ dependencies {
 
 
 # Initiate Qiscus SDK
+## SampleApp.Java
 ### Init Qiscus
 Init Qiscus at your application class
 ```java
@@ -30,45 +31,45 @@ public class SampleApps extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Qiscus.init(this, "yourQiscusAppId");
+        Qiscus.init(this, "DRAGONFLY");
     }
 }
 ```
 
 
+## MainActivity.java
 ### Login to Qiscus engine
 Before user can start chatting each other, they must login to qiscus engine.
 ```java
-Qiscus.with("user@email.com", "password")
-      .login(new Qiscus.LoginListener() {
-          @Override
-          public void onSuccess(QiscusAccount qiscusAccount) {
-              Log.i(TAG, "Login with account: " + qiscusAccount);
-          }
-          @Override
-          public void onError(Throwable throwable) {
-              throwable.printStackTrace();
-              showError(throwable.getMessage());
-          }
-      });
+        Qiscus.with("e3@qiscus.com", "password")
+                .login(new Qiscus.LoginListener() {
+                    @Override
+                    public void onSuccess(QiscusAccount qiscusAccount) {
+
+
+                    }
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                });
 ```
 
 
 ### Start the chatting
 ```java
-Qiscus.buildChatWith("jhon.doe@gmail.com")
-      .withTitle("Jhon Doe")
-      .build(this, new Qiscus.ChatActivityBuilderListener() {
-          @Override
-          public void onSuccess(Intent intent) {
-              startActivity(intent);
-          }
-          @Override
-          public void onError(Throwable throwable) {
-              throwable.printStackTrace();
-              showError(throwable.getMessage());
-          }
-      });
+        Qiscus.buildChatWith("e2@qiscus.com")
+                .withTitle("Evan")
+                .build(MainActivity.this, new Qiscus.ChatActivityBuilderListener() {
+                    @Override
+                    public void onSuccess(Intent intent) {
+                        startActivity(intent);
+                    }
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                });
 ```
 
 
@@ -76,15 +77,14 @@ Qiscus.buildChatWith("jhon.doe@gmail.com")
 Dont like the default template? You can customize it :
 
 ```java
-Qiscus.getChatConfig()
-      .setStatusBarColor(R.color.blue)
-      .setAppBarColor(R.color.red)
-      .setTitleColor(R.color.white)
-      .setLeftBubbleColor(R.color.green)
-      .setRightBubbleColor(R.color.yellow)
-      .setRightBubbleTextColor(R.color.white)
-      .setRightBubbleTimeColor(R.color.grey)
-      .setTimeFormat(date -> new SimpleDateFormat("HH:mm").format(date));
+        Qiscus.getChatConfig()
+                .setStatusBarColor(android.R.color.holo_green_dark)
+                .setAppBarColor(android.R.color.holo_green_dark)
+                .setTitleColor(android.R.color.white)
+                .setLeftBubbleColor(android.R.color.holo_green_dark)
+                .setRightBubbleColor(android.R.color.holo_blue_dark)
+                .setRightBubbleTextColor(android.R.color.white)
+                .setRightBubbleTimeColor(android.R.color.white);
 ```
 
 
