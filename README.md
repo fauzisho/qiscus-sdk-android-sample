@@ -90,8 +90,8 @@ Dont like the default template? You can customize it :
 
 ## Screen Shoots
 
-![alt tag](https://qiscuss3.s3.amazonaws.com/e@qiscus.com/23207/5b6b6606c7cf9950cb194633972c003a/Screenshot_20160913-163838.png)
+![alt tag](https://qiscuss3.s3.amazonaws.com/example@mail.com/xxx/b9d5138a93210eac8d1455bf066a86b8/2.png)
 
-![alt tag](https://qiscuss3.s3.amazonaws.com/e@qiscus.com/23207/5b6b6606c7cf9950cb194633972c003a/Screenshot_20160913-163838.png)
+![alt tag](https://qiscuss3.s3.amazonaws.com/example@mail.com/xxx/3d1b1b4bd71bc468898fed2f318be5e0/1.png)
 
 
