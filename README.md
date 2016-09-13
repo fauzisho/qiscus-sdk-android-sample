@@ -2,7 +2,7 @@
 
 Qiscus SDK is a lightweight and powerful android chat library. Qiscus SDK will allow you to easyly integrating Qiscus engine with your apps to make cool chatting application.
 
-# Instalation
+# Install Qiscus SDK
 Add to your project build.gradle
 ```groovy
 allprojects {
@@ -22,7 +22,7 @@ dependencies {
 ```
 
 
-# Let's make cools chatting apps!
+# Initiate Qiscus SDK
 #### Init Qiscus
 Init Qiscus at your application class
 ```java
@@ -73,7 +73,8 @@ Qiscus.buildChatWith("jhon.doe@gmail.com")
 
 
 ### Customize the chat UI
-Boring with default template? You can customized it, try it!, we have more items than those below code, its just example.
+Dont like the default template? You can customize it :
+
 ```java
 Qiscus.getChatConfig()
       .setStatusBarColor(R.color.blue)
@@ -87,31 +88,4 @@ Qiscus.getChatConfig()
 ```
 
 
-### RxJava Support
-```java
-// Login to qiscus engine with rxjava example
-Qiscus.with("user@email.com", "password")
-      .login()
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(qiscusAccount -> {
-          Log.i("MainActivity", "Login with account: " + qiscusAccount);
-      }, throwable -> {
-          throwable.printStackTrace();
-          showError(throwable.getMessage());
-      });
-
-// Start a chat activity with rxjava example      
-Qiscus.buildChatWith("jhon.doe@gmail.com")
-      .withTitle("Jhon Doe")
-      .build(this)
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(intent -> {
-          startActivity(intent);
-      }, throwable -> {
-          throwable.printStackTrace();
-          showError(throwable.getMessage());
-      });
-```
 
