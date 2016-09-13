@@ -23,7 +23,7 @@ dependencies {
 
 
 # Initiate Qiscus SDK
-#### Init Qiscus
+### Init Qiscus
 Init Qiscus at your application class
 ```java
 public class SampleApps extends Application {
@@ -36,7 +36,7 @@ public class SampleApps extends Application {
 ```
 
 
-#### Login to Qiscus engine
+### Login to Qiscus engine
 Before user can start chatting each other, they must login to qiscus engine.
 ```java
 Qiscus.with("user@email.com", "password")
