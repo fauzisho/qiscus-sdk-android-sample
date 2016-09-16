@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,14 +11,31 @@
     tools:context="com.qiscus.sdksample.qiscussamplesdk.MainActivity">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/info"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_above="@+id/start_chat_button"
+        android:gravity="center_horizontal"
+        android:textSize="16sp"
+        android:visibility="gone"/>
 
     <Button
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:text="Start Chat"
+        android:id="@+id/start_chat_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:onClick="goToChat"
-        />
+        android:text="Start Chat"/>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/start_chat_button"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="-12dp"
+        android:indeterminate="true"
+        android:visibility="gone"/>
 </RelativeLayout>
