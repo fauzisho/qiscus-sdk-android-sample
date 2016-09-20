@@ -8,34 +8,63 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.qiscus.sdksample.qiscussamplesdk.MainActivity">
+    tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/start_chat_button"
-        android:gravity="center_horizontal"
-        android:textSize="16sp"
-        android:visibility="gone"/>
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_above="@+id/input_panel"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/ic_launcher"/>
 
-    <Button
-        android:id="@+id/start_chat_button"
+    <LinearLayout
+        android:id="@+id/input_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:onClick="goToChat"
-        android:text="Start Chat"/>
+        android:orientation="vertical">
 
-    <ProgressBar
-        android:id="@+id/progress"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/start_chat_button"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginTop="-12dp"
-        android:indeterminate="true"
-        android:visibility="gone"/>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="Email"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/key"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="User key"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:onClick="setupUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit"/>
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="-12dp"
+            android:indeterminate="true"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 </RelativeLayout>
