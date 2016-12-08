@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ChatTheme" parent="QiscusTheme">
+        <item name="actionModeBackground">@android:color/holo_green_dark</item>
+    </style>
+
 </resources>
