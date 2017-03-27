@@ -136,6 +136,7 @@ public class RoomsActivity extends AppCompatActivity {
     private void openChatWith(final String email) {
         showLoading();
         Qiscus.buildChatWith(email)
+                .withTitle(email)
                 .build(this, new Qiscus.ChatActivityBuilderListener() {
                     @Override
                     public void onSuccess(Intent intent) {
@@ -147,7 +148,7 @@ public class RoomsActivity extends AppCompatActivity {
                     @Override
                     public void onError(Throwable throwable) {
                         throwable.printStackTrace();
-                        showError(throwable.getMessage());
+                        showError("Failed to create chatroom, make sure " + email + " is registered!");
                         dismissLoading();
                     }
                 });
