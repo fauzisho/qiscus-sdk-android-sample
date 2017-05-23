@@ -9,7 +9,7 @@
     </style>
 
     <style name="ChatTheme" parent="QiscusTheme">
-        <item name="actionModeBackground">@android:color/holo_green_dark</item>
+        <item name="actionModeBackground">@color/colorPrimary</item>
     </style>
 
 </resources>

@@ -7,65 +7,57 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.util.PatternsCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qiscus.sdk.Qiscus;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
-/**
- * Created by zetra. on 9/19/16.
- */
+import retrofit2.HttpException;
+
 public class RoomsActivity extends AppCompatActivity {
+    private static final String TAG = RoomsActivity.class.getSimpleName();
 
     private RecyclerView recyclerView;
-    private EmailAdapter adapter;
+    private ContactAdapter adapter;
     private SharedPreferences sharedPreferences;
     private ProgressDialog progressDialog;
+
+    private Gson gson;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rooms);
+
+        gson = new Gson();
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         sharedPreferences = getSharedPreferences("rooms", Context.MODE_PRIVATE);
 
-        customizeChatUi();
-
-        adapter = new EmailAdapter(this, new ArrayList<>(getEmails()));
-        adapter.setOnClickListener(new EmailAdapter.OnClickListener() {
+        adapter = new ContactAdapter(this, getContacts());
+        adapter.setOnClickListener(new ContactAdapter.OnClickListener() {
             @Override
             public void onClick(int position) {
-                openChatWith(adapter.getEmails().get(position));
+                openChatWith(adapter.getContacts().get(position));
             }
         });
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-    }
-
-    private void customizeChatUi() {
-        Qiscus.getChatConfig()
-                .setStatusBarColor(android.R.color.holo_green_dark)
-                .setAppBarColor(android.R.color.holo_green_dark)
-                .setTitleColor(android.R.color.white)
-                .setLeftBubbleColor(android.R.color.holo_green_dark)
-                .setRightBubbleColor(android.R.color.holo_blue_dark)
-                .setRightBubbleTextColor(android.R.color.white)
-                .setRightBubbleTimeColor(android.R.color.white);
     }
 
     @Override
@@ -102,72 +94,72 @@ public class RoomsActivity extends AppCompatActivity {
     }
 
     public void createNewChat(View view) {
-        final EditText emailField = new EditText(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        emailField.setLayoutParams(lp);
-        emailField.setHint("Email");
-
-        new AlertDialog.Builder(this)
-                .setTitle("New Chat")
-                .setView(emailField)
-                .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String email = emailField.getText().toString();
-                        if (!PatternsCompat.EMAIL_ADDRESS.matcher(email).matches()) {
-                            emailField.setError("Please insert a valid email!");
-                        } else {
-                            openChatWith(email);
-                            dialog.dismiss();
-                        }
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
+        NewChatDialog.newInstance(new NewChatDialog.Listener() {
+            @Override
+            public void onSubmit(String name, String email) {
+                openChatWith(new Contact(email, name));
+            }
+        }).show(getSupportFragmentManager(), TAG);
     }
 
-    private void openChatWith(final String email) {
+    private void openChatWith(final Contact contact) {
         showLoading();
-        Qiscus.buildChatWith(email)
-                .withTitle(email)
+        Qiscus.buildChatWith(contact.getEmail())
+                .withTitle(contact.getName())
                 .build(this, new Qiscus.ChatActivityBuilderListener() {
                     @Override
                     public void onSuccess(Intent intent) {
-                        saveEmail(email);
+                        saveContact(contact);
                         startActivity(intent);
                         dismissLoading();
                     }
 
                     @Override
                     public void onError(Throwable throwable) {
+                        if (throwable instanceof HttpException) { //Error response from server
+                            HttpException e = (HttpException) throwable;
+                            try {
+                                String errorMessage = e.response().errorBody().string();
+                                Log.e(TAG, errorMessage);
+                                showError(errorMessage);
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        } else if (throwable instanceof IOException) { //Error from network
+                            showError("Can not connect to qiscus server!");
+                        } else { //Unknown error
+                            showError("Unexpected error!");
+                        }
                         throwable.printStackTrace();
-                        showError("Failed to create chatroom, make sure " + email + " is registered!");
                         dismissLoading();
                     }
                 });
     }
 
-    private Set<String> getEmails() {
-        return sharedPreferences.getStringSet("emails", new HashSet<String>());
+    private List<Contact> getContacts() {
+        String json = sharedPreferences.getString("contacts", "");
+        return gson.fromJson(json, new TypeToken<List<Contact>>() {
+        }.getType());
     }
 
-    private void saveEmail(String email) {
-        Set<String> emails = getEmails();
-        emails.add(email);
-        sharedPreferences.edit().putStringSet("emails", emails).apply();
-        updateList(email);
+    private void saveContact(Contact contact) {
+        List<Contact> contacts = getContacts();
+        if (contacts == null) {
+            contacts = new ArrayList<>();
+        }
+
+        if (!contacts.contains(contact)) {
+            contacts.add(contact);
+            sharedPreferences.edit()
+                    .putString("contacts", gson.toJson(contacts))
+                    .apply();
+            updateList(contact);
+        }
     }
 
-    private void updateList(String email) {
-        if (!adapter.getEmails().contains(email)) {
-            adapter.getEmails().add(email);
+    private void updateList(Contact contact) {
+        if (!adapter.getContacts().contains(contact)) {
+            adapter.getContacts().add(contact);
             adapter.notifyDataSetChanged();
         }
     }
