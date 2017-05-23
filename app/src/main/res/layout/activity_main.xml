@@ -29,11 +29,24 @@
             android:layout_height="wrap_content">
 
             <EditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Name"
+                android:inputType="textEmailAddress"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:hint="Email"/>
+                android:hint="Email"
+                android:inputType="textEmailAddress"/>
 
         </android.support.design.widget.TextInputLayout>
 
@@ -45,14 +58,15 @@
                 android:id="@+id/key"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="User key"/>
+                android:hint="Secret key"
+                android:inputType="textPassword"/>
 
         </android.support.design.widget.TextInputLayout>
 
         <Button
-            android:onClick="setupUser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="setupUser"
             android:text="Submit"/>
 
         <ProgressBar
