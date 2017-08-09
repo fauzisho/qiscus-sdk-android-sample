@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                         override fun onError(throwable: Throwable) {
                             if (throwable is HttpException) { //Error response from server
                                 try {
-                                    val errorMessage = throwable.response().errorBody().string()
+                                    val errorMessage = throwable.response().errorBody()!!.string()
                                     Log.e(TAG, errorMessage)
                                     showError(errorMessage)
                                 } catch (e1: IOException) {

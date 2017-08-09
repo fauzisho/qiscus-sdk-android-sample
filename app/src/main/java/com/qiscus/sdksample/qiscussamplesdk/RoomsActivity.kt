@@ -20,8 +20,6 @@ import com.google.gson.reflect.TypeToken
 import com.qiscus.sdk.Qiscus
 import retrofit2.HttpException
 import java.io.IOException
-import java.util.*
-import kotlin.collections.ArrayList
 
 class RoomsActivity : AppCompatActivity() {
 
@@ -97,7 +95,7 @@ class RoomsActivity : AppCompatActivity() {
                     override fun onError(throwable: Throwable) {
                         if (throwable is HttpException) { //Error response from server
                             try {
-                                val errorMessage = throwable.response().errorBody().string()
+                                val errorMessage = throwable.response().errorBody()!!.string()
                                 Log.e(TAG, errorMessage)
                                 showError(errorMessage)
                             } catch (e1: IOException) {
