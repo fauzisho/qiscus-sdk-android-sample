@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.qiscus.sdksample.qiscussamplesdk">
 
     <application
@@ -19,11 +18,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".RoomsActivity"/>
-        <activity
-            android:name="com.qiscus.sdk.ui.QiscusChatActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/ChatTheme"
-            tools:replace="android:theme"/>
     </application>
 
 </manifest>

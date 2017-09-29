@@ -17,6 +17,6 @@
         android:layout_height="1.2dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:background="@color/qiscus_light_grey"/>
+        android:background="@color/colorAccent"/>
 
 </LinearLayout>

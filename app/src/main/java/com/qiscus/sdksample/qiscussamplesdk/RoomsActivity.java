@@ -20,7 +20,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.qiscus.sdk.Qiscus;
+import com.qiscus.sdk.chat.core.Qiscus;
+import com.qiscus.sdk.chat.core.QiscusUseCaseFactory;
+import com.qiscus.sdk.chat.domain.interactor.Action;
+import com.qiscus.sdk.chat.domain.interactor.room.GetRoomWithUserId;
+import com.qiscus.sdk.chat.domain.model.Room;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,6 +34,8 @@ import retrofit2.HttpException;
 
 public class RoomsActivity extends AppCompatActivity {
     private static final String TAG = RoomsActivity.class.getSimpleName();
+
+    private QiscusUseCaseFactory useCaseFactory = Qiscus.Companion.getInstance().getUseCaseFactory();
 
     private RecyclerView recyclerView;
     private ContactAdapter adapter;
@@ -76,7 +82,7 @@ public class RoomsActivity extends AppCompatActivity {
                     .setPositiveButton("Logout", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Qiscus.clearUser();
+                            useCaseFactory.logout().execute(null);
                             sharedPreferences.edit().clear().apply();
                             startActivity(new Intent(RoomsActivity.this, MainActivity.class));
                             finish();
@@ -104,36 +110,35 @@ public class RoomsActivity extends AppCompatActivity {
 
     private void openChatWith(final Contact contact) {
         showLoading();
-        Qiscus.buildChatWith(contact.getEmail())
-                .withTitle(contact.getName())
-                .build(this, new Qiscus.ChatActivityBuilderListener() {
-                    @Override
-                    public void onSuccess(Intent intent) {
-                        saveContact(contact);
-                        startActivity(intent);
-                        dismissLoading();
+        GetRoomWithUserId getRoomWithUserId = useCaseFactory.getRoomWithUserId();
+        getRoomWithUserId.execute(new GetRoomWithUserId.Params(contact.getEmail()), new Action<Room>() {
+            @Override
+            public void call(Room room) {
+                Log.d("ZETRA", "Room " + room);
+                saveContact(contact);
+                dismissLoading();
+            }
+        }, new Action<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                if (throwable instanceof HttpException) { //Error response from server
+                    HttpException e = (HttpException) throwable;
+                    try {
+                        String errorMessage = e.response().errorBody().string();
+                        Log.e(TAG, errorMessage);
+                        showError(errorMessage);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
                     }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        if (throwable instanceof HttpException) { //Error response from server
-                            HttpException e = (HttpException) throwable;
-                            try {
-                                String errorMessage = e.response().errorBody().string();
-                                Log.e(TAG, errorMessage);
-                                showError(errorMessage);
-                            } catch (IOException e1) {
-                                e1.printStackTrace();
-                            }
-                        } else if (throwable instanceof IOException) { //Error from network
-                            showError("Can not connect to qiscus server!");
-                        } else { //Unknown error
-                            showError("Unexpected error!");
-                        }
-                        throwable.printStackTrace();
-                        dismissLoading();
-                    }
-                });
+                } else if (throwable instanceof IOException) { //Error from network
+                    showError("Can not connect to qiscus server!");
+                } else { //Unknown error
+                    showError("Unexpected error!");
+                }
+                throwable.printStackTrace();
+                dismissLoading();
+            }
+        });
     }
 
     private List<Contact> getContacts() {
